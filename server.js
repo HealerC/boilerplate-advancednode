@@ -71,9 +71,16 @@ myDB(async client => {
 	}
   );
 
-  app.get('/profile', (req, res) => {
+  app.get('/profile', ensureAuthenticated, (req, res) => {
   	res.render(__dirname + 'views/pug/profile');
   });
+
+  function ensureAuthenticated(req, res, next) {
+  	if (req.isAuthenticated()) {
+  	  return next();
+  	}
+  	res.redirect('/');
+  }
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render('pug', { title: e, message: 'Unable to login' });
