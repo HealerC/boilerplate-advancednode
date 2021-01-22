@@ -37,7 +37,8 @@ myDB(async client => {
     res.render(__dirname + '/views/pug', {
       title: 'Connected to Database',
       message: 'Please login',
-      showLogin: true
+      showLogin: true,
+      showRegistration: true
     });
   });
 
@@ -81,6 +82,20 @@ myDB(async client => {
   	}
   	res.redirect('/');
   }
+
+  app.route('/logout')
+     .get((req, res) => {
+     	req.logout();
+     	res.redirect('/');
+     });
+
+  app.use((req, res, next) => {
+  	res.status(404)
+  	   .type('text')
+  	   .send('Not Found');
+  });
+
+
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render('pug', { title: e, message: 'Unable to login' });
