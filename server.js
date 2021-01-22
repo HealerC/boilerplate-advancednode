@@ -11,10 +11,13 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.set('view engine', 'pug');		// Template engine
+const pugIndex = __dirname + '/views/pug';
 app.route('/').get((req, res) => {
-  res.render('Load your view here');
+  res.render(pugIndex, {title: "Hello", message: "Please login"});
 });
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log('Listening on port ' + process.env.PORT);
+const port = process.env.PORT || 3000
+app.listen(port, () => {
+  console.log('Listening on port ' + port);
 });
