@@ -95,7 +95,36 @@ myDB(async client => {
   	   .send('Not Found');
   });
 
-
+  app.route('/register')
+     .post((req, res, next) => {
+       myDataBase.findOne({ username: req.body.username }, function(err, user) {
+         if (err) {
+           next(err);
+         } else if (user) {
+           res.redirect('/');
+         } else {
+           myDataBase.insertOne({
+             username: req.body.username,
+             password: req.body.password
+           },
+             (err, doc) => {
+               if (err) {
+                 res.redirect('/');
+               } else {
+                 // The inserted document is held within
+                 // the ops property of the doc
+                 next(null, doc.ops[0]);
+               }
+             }
+           )
+         }
+       })
+     },
+       passport.authenticate('local', { failureRedirect: '/' }),
+       (req, res, next) => {
+         res.redirect('/profile');
+       }
+     );
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render('pug', { title: e, message: 'Unable to login' });
