@@ -33,9 +33,12 @@ module.exports = function(app, myDataBase) {
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
     callbackURL: "https://boilerplate-advancednode.healerc.repl.co/auth/github/callback"
   },
-  function(accessToken, refreshToken, profile, cb) {
-    User.findOrCreate({ githubId: profile.id }, function (err, user) {
-      return cb(err, user);
+  function(accessToken, refreshToken, profile, done) {
+    console.log('Github User '+ profile.id +' attempted to log in.');
+    myDataBase.findOne({ githubId: profile.id }, function (err, user) {
+      if (err) return done(err);
+      if (!user) return done(null, false);
+      return done(err, user);
     });
   }
 ));
