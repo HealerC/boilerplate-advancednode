@@ -37,7 +37,6 @@ module.exports = function(app, myDataBase) {
     console.log('Github User '+ profile.id +' attempted to log in.');
     myDataBase.findOne({ githubId: profile.id }, function (err, user) {
       if (err) return done(err);
-      if (!user) return done(null, false);
       return done(err, user);
     });
   }
