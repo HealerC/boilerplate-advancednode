@@ -2,6 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const bcrypt = require('bcrypt');
 const ObjectID = require('mongodb').ObjectID;
+const GitHubStrategy = require('passport-github');
 
 module.exports = function(app, myDataBase) {
   // Serialization and deserialization here...
@@ -26,4 +27,16 @@ module.exports = function(app, myDataBase) {
       });
     }
   ));
+
+  passport.use(new GitHubStrategy({
+    clientID: process.env.GITHUB_CLIENT_ID,
+    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    callbackURL: "https://boilerplate-advancednode.healerc.repl.co/auth/github/callback"
+  },
+  function(accessToken, refreshToken, profile, cb) {
+    User.findOrCreate({ githubId: profile.id }, function (err, user) {
+      return cb(err, user);
+    });
+  }
+));
 }
