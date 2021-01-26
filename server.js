@@ -1,6 +1,7 @@
 'use strict';
 require('dotenv').config();
 const express = require('express');
+const app = express();
 const session = require('express-session');
 const passport = require('passport');
 const http = require('http').createServer(app);
@@ -11,7 +12,6 @@ const fccTesting = require('./freeCodeCamp/fcctesting.js');	// Testing
 const routes = require('./routes.js');
 const auth = require('./auth.js');
 
-const app = express();
 
 fccTesting(app); //For FCC testing purposes
 
