@@ -3,6 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const passport = require('passport');
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
+
 const myDB = require('./connection');						// Connection to MONGODB Database
 const fccTesting = require('./freeCodeCamp/fcctesting.js');	// Testing
 const routes = require('./routes.js');
@@ -31,6 +34,10 @@ myDB(async client => {
   const myDataBase = await client.db('database').collection('users');
   routes(app, myDataBase);
   auth(app, myDataBase);
+
+  io.on('connection', socket => {
+  	console.log("A user has connected");
+  });
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render('pug', { title: e, message: 'Unable to login' });
@@ -41,6 +48,6 @@ myDB(async client => {
 
 
 const port = process.env.PORT || 3000
-app.listen(port, () => {
+http.listen(port, () => {
   console.log('Listening on port ' + port);
 });
