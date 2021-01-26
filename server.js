@@ -35,9 +35,17 @@ myDB(async client => {
   routes(app, myDataBase);
   auth(app, myDataBase);
 
+  /* Emit from server to io */
+  let currentUsers = 0;
+
+
+
   io.on('connection', socket => {
   	console.log("A user has connected");
+  	++currentUsers;
+  	io.emit('user count', currentUsers);
   });
+
 }).catch(e => {
   app.route('/').get((req, res) => {
     res.render('pug', { title: e, message: 'Unable to login' });

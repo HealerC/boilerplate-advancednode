@@ -8,4 +8,10 @@ $(document).ready(function () {
     $('#m').val('');
     return false; // prevent form submit from refreshing page
   });
+
+  socket.on('user count', (data) => {
+  	console.log(data);
+  });
+  
 });
+
